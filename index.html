@@ -1,0 +1,353 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@3.3.8/dist/vuetify.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/vuetify@3.3.8/dist/vuetify.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+<div id="app">
+  <v-container class="container">
+    <v-card class="mx-auto elevation-4">
+      <v-progress-linear :model-value="progress" color="var(--main-color)" rounded></v-progress-linear>
+      <v-container>
+        <v-col>
+          <v-row justify="left" class="mt-4">
+            <h1>
+              <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -90 500 600"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></svg>
+              Zinsrechner
+            </h1>
+          </v-row>
+        </v-col>
+        <v-row class="mt-4">
+          <v-col>
+            <b>Was möchtest du berechnen?</b>
+            <v-select v-model="typeSelection" color="var(--main-color)" :items="types" hide-details density="compact"
+              variant="outlined"></v-select>
+          </v-col>
+        </v-row>
+        <v-col v-if="typeSelection === 'Anfangskapital'">
+          <v-row class="mt-4">
+            <v-col>
+              <b>Laufzeit in Jahren
+              </b>
+              <v-text-field v-model="laufzeitInJahren" color="var(--main-color)" type="number" placeholder="15,00" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Laufzeit in Monaten</b>
+              <v-text-field v-model="laufzeitInMonaten" color="var(--main-color)" type="number" placeholder="180" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Jahreszinssatz (Nominal)
+              </b>
+              <v-text-field v-model="jahreszinssatz" color="var(--main-color)" type="number" placeholder="1,50" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Endkapital
+              </b>
+              <v-text-field v-model="endkapital" color="var(--main-color)" type="number" placeholder="1,50" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-8">
+            <v-btn @click="calculate" block color="var(--main-color)" :ripple="false">
+              Berechnem
+            </v-btn>
+          </v-row>
+        </v-col>
+        <v-col v-if="typeSelection === 'Zinssatz'">
+          <v-row class="mt-4">
+            <v-col>
+              <b>Anfangskapital</b>
+              <v-text-field v-model="anfangskapital" color="var(--main-color)" type="number" placeholder="150.000,00"
+                hide-details density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Laufzeit in Jahren
+              </b>
+              <v-text-field v-model="laufzeitInJahren" color="var(--main-color)" type="number" placeholder="15,00" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Laufzeit in Monaten</b>
+              <v-text-field v-model="laufzeitInMonaten" color="var(--main-color)" type="number" placeholder="180" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Endkapital
+              </b>
+              <v-text-field v-model="endkapital" color="var(--main-color)" type="number" placeholder="150.000,00" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-8">
+            <v-btn @click="calculate" block color="var(--main-color)" :ripple="false">
+              Berechnem
+            </v-btn>
+          </v-row>
+        </v-col>
+        <v-col v-if="typeSelection === 'Laufzeit'">
+          <v-row class="mt-4">
+            <v-col>
+              <b>Anfangskapital</b>
+              <v-text-field v-model="anfangskapital" color="var(--main-color)" type="number" placeholder="150.000,00"
+                hide-details density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Jahreszinssatz (Nominal)
+              </b>
+              <v-text-field v-model="jahreszinssatz" color="var(--main-color)" type="number" placeholder="1,50" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Endkapital
+              </b>
+              <v-text-field v-model="endkapital" color="var(--main-color)" type="number" placeholder="150.000,00" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-8">
+            <v-btn @click="calculate" block color="var(--main-color)" :ripple="false">
+              Berechnem
+            </v-btn>
+          </v-row>
+        </v-col>
+        <v-col v-if="typeSelection === 'Endkapital'">
+          <v-row class="mt-4">
+            <v-col>
+              <b>Anfangskapital</b>
+              <v-text-field v-model="anfangskapital" color="var(--main-color)" type="number" placeholder="150.000,00"
+                hide-details density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Laufzeit in Jahren
+              </b>
+              <v-text-field v-model="laufzeitInJahren" color="var(--main-color)" type="number" placeholder="15,00" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Laufzeit in Monaten</b>
+              <v-text-field v-model="laufzeitInMonaten" color="var(--main-color)" type="number" placeholder="180" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-4">
+            <v-col>
+              <b>Jahreszinssatz (Nominal)
+              </b>
+              <v-text-field v-model="jahreszinssatz" color="var(--main-color)" type="number" placeholder="1,50" hide-details
+                density="compact" variant="outlined"></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mt-8">
+            <v-btn @click="calculate" block color="var(--main-color)" :ripple="false">
+              Berechnem
+            </v-btn>
+          </v-row>
+        </v-col>
+        </v-col>
+      </v-container>
+    </v-card>
+    <v-card v-if="result !== undefined" class="mx-auto elevation-4">
+      <v-col class="ma-2">
+      <v-row justify="start" class="ma-2">
+        <h3>Berechnung</h3>
+      </v-row>
+      <v-row v-if="typeSelection == 'Endkapital'" justify="space-between" class="ma-2">
+        <b>{{ typeSelection }}</b>
+        <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(result) }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Endkapital'" justify="space-between" class="ma-2">
+        <b>{{ 'Zinsen gesamt' }}</b>
+        <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(result - anfangskapitalCopy) }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Anfangskapital'" justify="space-between" class="ma-2">
+        <b>{{ typeSelection }}</b>
+        <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(result) }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Anfangskapital'" justify="space-between" class="ma-2">
+        <b>{{ 'Zinsen gesamt' }}</b>
+        <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(endkapitalCopy - result) }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Zinssatz'" justify="space-between" class="ma-2">
+        <b>{{ typeSelection + ' (nominal) p.a.'}}  </b>
+        <!-- <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(result) }}</b> -->
+        <b>{{ Number(result).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}) }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Zinssatz'" justify="space-between" class="ma-2">
+        <b>{{ 'Zinsen gesamt' }}</b>
+        <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(endkapitalCopy - anfangskapitalCopy) }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Laufzeit'" justify="space-between" class="ma-2">
+        <b>{{ 'Laufzeit in Monaten'}}  </b>
+        <!-- <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(result) }}</b> -->
+        <b>{{ (result * 12).toFixed(2).replace('.', ',') + ' Monate' }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Laufzeit'" justify="space-between" class="ma-2">
+        <b>{{ 'Laufzeit in Jahren' }}</b>
+        <b>{{ (result).toFixed(2).replace('.', ',') + ' Jahre' }}</b>
+      </v-row>
+      <v-row v-if="typeSelection == 'Laufzeit'" justify="space-between" class="ma-2">
+        <b>{{ 'Zinsen gesamt' }}</b>
+        <b>{{ new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(endkapitalCopy - anfangskapitalCopy) }}</b>
+      </v-row>
+    </v-col>
+    </v-card>
+  </v-container>
+</div>
+<script>
+  const { createApp, ref } = Vue
+  const { createVuetify } = Vuetify
+  const vuetify = createVuetify()
+
+  const app = createApp(
+    {
+      data() {
+        return {
+          types: ['Anfangskapital', 'Zinssatz', 'Laufzeit', 'Endkapital'],
+          typeSelection: 'Endkapital',
+          anfangskapital: 150000,
+          laufzeitInJahren: 15,
+          laufzeitInMonaten: 180,
+          jahreszinssatz: 1.5,
+          endkapital: 150000,
+          result: undefined,
+          anfangskapitalCopy: 150000,
+          laufzeitInJahrenCopy: 15,
+          laufzeitInMonatenCopy: 180,
+          jahreszinssatzCopy: 1.5,
+          endkapitalCopy: 150000,
+        }
+      },
+      watch: {
+      // whenever question changes, this function will run
+      typeSelection(newValue, oldValue) {
+        this.result = undefined
+      },
+      laufzeitInJahren(newValue, oldValue) {
+        this.laufzeitInMonaten = newValue * 12
+      },
+      laufzeitInMonaten(newValue, oldValue) {
+        this.laufzeitInJahren = newValue / 12
+      },
+    },
+      created() {
+        try {
+        } catch (error) {
+          console.log('error')
+          console.log(error)
+        }
+      }, methods: {
+        calculate() {
+          this.result = undefined
+          this.anfangskapitalCopy = this.anfangskapital
+          this.laufzeitInJahrenCopy = this.laufzeitInJahren
+          this.laufzeitInMonatenCopy = this.laufzeitInMonaten
+          this.jahreszinssatzCopy = this.jahreszinssatz
+          this.endkapitalCopy = this.endkapital
+          // clean all results
+          if (this.typeSelection === 'Endkapital') {
+            this.result = this.anfangskapital * Math.pow(1 + this.jahreszinssatz/100, this.laufzeitInJahren)
+            console.log(this.result)
+          } else if (this.typeSelection === 'Anfangskapital') {
+            this.result = this.endkapital / Math.pow(1 + this.jahreszinssatz/100, this.laufzeitInJahren)
+            console.log(this.result)
+          } else if (this.typeSelection === 'Zinssatz') {
+            // Zinssatz = ((Endkapital / Anfangskapital) ^ (1 / Laufzeit in Jahren)) - 1
+            this.result = (Math.pow((this.endkapital / this.anfangskapital),(1/this.laufzeitInJahren))) - 1
+            console.log(this.result)
+          } else if (this.typeSelection === 'Laufzeit') {
+            // Anlagedauer = log(Endkapital / Anfangskapital) / log(1 + Zinssatz)
+            // Math.log(200000 / 150000) / Math.log(1 + 0.015)
+            this.result = Math.log(this.endkapital / this.anfangskapital) / Math.log(1 + (this.jahreszinssatz/100))
+            console.log(this.result)
+          }
+        }
+      }
+    },
+
+  )
+  app.use(vuetify).mount('#app')
+
+</script>
+
+<style>
+  .force-border {
+    border-color: var(--main-color);
+  }
+
+  .hover-border:hover {
+    border-color: var(--main-color);
+    cursor: pointer;
+  }
+
+  @media (min-width: 1800px) {
+    .container {
+      max-width: 1800px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+      padding-right: 2rem;
+      padding-left: 2rem;
+    }
+  }
+
+  .container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .primary-color {
+    color: var(--main-color);
+  }
+
+
+  :root {
+    --main-color: #474aff;
+    --back-button: #172849;
+  }
+</style>
